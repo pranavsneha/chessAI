@@ -1,0 +1,14 @@
+{
+  "name": "thewrizzler",
+  "version": "1.0.0",
+  "description": "a simple ai using minimax and alpha beta pruning, that plays chess",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jackson Mostrom",
+  "license": "ISC",
+  "dependencies": {
+    "chess.js": "^1.0.0-beta.2"
+  }
+}
