@@ -1,8 +1,6 @@
 
 #ignore everything in node modules
 node_modules/
-#ignore babel
-.babelrc
-#ignore webpack.config.js
-webpack.config.js
+
+
 
