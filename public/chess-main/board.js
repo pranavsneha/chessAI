@@ -1,16 +1,16 @@
 class ChessGame {
     constructor() {
-        // Create an empty array to store the tiles
+   
         this.tiles = [];
         this.turn = "white";
-        this.selectedId = undefined;
+        
         this.white_color = "white";
         this.black_color = "#b8ed18";
-        
-       
+        this.chess = new Chess();
+       this.selectedPiece = undefined;
         
       
-        // Create a container element to hold the chess board
+    
         let container = document.createElement("div");
       
         // Create the chess board HTML
@@ -24,22 +24,25 @@ class ChessGame {
               color: undefined,
               piece: undefined,
               gridLocation: {x:j,y:j},
+              SAN: this.setSAN(i,j),
             });
           }
           html += "<br>";
         }
       
-        // Add the chess board HTML to the container element
         container.innerHTML = html;
-      
-        // Add the container element to the page
         document.body.appendChild(container);
       
-        // Draw the pieces on the board
       this.initilizeBoard();
       }
       
-
+setSAN(i,j)
+{
+  let letters = ['a','b','c','d','e','f','g','h'];
+  let numbers = ['8','7','6','5','4','3','2','1'];
+  return letters[j].concat(numbers[i]);
+  
+}
 
 initilizeBoard() {
 
@@ -87,23 +90,54 @@ initilizeBoard() {
 
 
    select(id) {
-    let tile = 
-    {button:document.getElementById(id),
-      gridLocation: {x:(id%8),y: (id-(id%8))/8},
-      id: id,
-      color: this.tiles[id].color,
-      piece: this.tiles[id].piece,
-      
-    };
-    this.tiles[id] =tile;
 
+    let tile = this.getTile(id);
+    
+    
+   // console.log(tile);
+    
+    if(this.selectedPiece === undefined)
+     {
+      this.selectedPiece = tile;
+     } else {
 
-    console.log(this.tiles[id]);
-      selectPiece(tile);
+        let isValid = this.chess.move({ from: this.selectedPiece.SAN, to: tile.SAN });
+        this.move(this.selectedPiece, tile );
+      //  console.log(this.chess.ascii());
+          this.selectedPiece = undefined;
+          
+
+     }
+    
+   
+     
     
   }
 
    
+move(from,to)
+{
+this.tiles[from.id].button.style.color = undefined;
+this.tiles[from.id].button.innerHTML = "";
+this.tiles[from.id].color = undefined;
+this.tiles[from.id].piece = undefined;
+
+
+this.tiles[to.id].piece = from.piece;
+this.tiles[to.id].color = from.color;
+this.tiles[to.id].button.style.color = from.color;
+this.tiles[to.id].button.innerHTML = from.piece;
+console.log(this.tiles[to.id]);
+console.log(this.tiles[from.id]);
+}
+
+
+  getTile(id){
+   
+    this.tiles[id].button = document.getElementById(id);
+    return this.tiles[id];
+     
+  }
   }
   
 
