@@ -11,27 +11,30 @@ class ChessGame {
         
       
     
-        let container = document.createElement("div");
-      
-        // Create the chess board HTML
-        let html = "";
-        for (let i = 0; i < 8; i++) {
-          for (let j = 0; j < 8; j++) {
-            let color = (i + j) % 2 == 0 ? "rgb(153,98,20)" : "rgb(26,17,5)";
-            let button = `<button style="background-color: ${color}; width: 50px; height: 50px" id =${(8*i) +j} onclick ="game.select(this.id)" ></button>`;
-            html += button;
-            this.tiles.push({id: (8*i)+j,
-              color: undefined,
-              piece: undefined,
-              gridLocation: {x:j,y:j},
-              SAN: this.setSAN(i,j),
-            });
-          }
-          html += "<br>";
-        }
-      
-        container.innerHTML = html;
-        document.body.appendChild(container);
+       let container = document.createElement("div");
+container.style.position = "relative";
+for (let i = 0; i < 8; i++) {
+  for (let j = 0; j < 8; j++) {
+    let color = (i + j) % 2 == 0 ? "rgb(153,98,20)" : "rgb(26,17,5)";
+    let button = document.createElement("button");
+    button.style.backgroundColor = color;
+    button.style.width = "50px";
+    button.style.height = "50px";
+    button.style.position = "absolute";
+    button.style.top = `${i * 50}px`;
+    button.style.left = `${j * 50}px`;
+    button.id = (8*i) + j;
+    button.onclick = function() {game.select(this.id)};
+    container.appendChild(button);
+    this.tiles.push({id: (8*i)+j,
+      color: undefined,
+      piece: undefined,
+      gridLocation: {x:j,y:j},
+      SAN: this.setSAN(i,j),
+    });
+  }
+}
+document.body.appendChild(container);
       
       this.initilizeBoard();
       }
@@ -74,8 +77,9 @@ initilizeBoard() {
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
       let piece = board[i][j];
-      if (piece !== "") {
+      
        let tile = document.getElementById(`${(i*8)+j}`);
+       if (piece !== "") {
         tile.style.color = pieces[piece].color;
         tile.innerHTML = pieces[piece].symbol;
         this.tiles[(i*8)+j].color = pieces[piece].color;
@@ -94,14 +98,15 @@ initilizeBoard() {
     let tile = this.getTile(id);
     
     
-   // console.log(tile);
+   console.log(tile);
     
-    if(this.selectedPiece === undefined)
+    if(this.selectedPiece == undefined && tile.piece !== undefined)
      {
       this.selectedPiece = tile;
-     } else {
+     } else if(this.selectedPiece != undefined && this.selectedPiece.id !== tile.id) {
 
         let isValid = this.chess.move({ from: this.selectedPiece.SAN, to: tile.SAN });
+        console.log(this.selectedPiece);
         this.move(this.selectedPiece, tile );
       //  console.log(this.chess.ascii());
           this.selectedPiece = undefined;
@@ -117,18 +122,18 @@ initilizeBoard() {
    
 move(from,to)
 {
+  this.tiles[to.id].piece = from.piece;
+  this.tiles[to.id].color = from.color;
+  this.tiles[to.id].button.style.color = from.color;
+  this.tiles[to.id].button.innerHTML = from.piece;
+
+this.tiles[from.id].piece = undefined;
+this.tiles[from.id].color = undefined;
 this.tiles[from.id].button.style.color = undefined;
 this.tiles[from.id].button.innerHTML = "";
-this.tiles[from.id].color = undefined;
-this.tiles[from.id].piece = undefined;
 
 
-this.tiles[to.id].piece = from.piece;
-this.tiles[to.id].color = from.color;
-this.tiles[to.id].button.style.color = from.color;
-this.tiles[to.id].button.innerHTML = from.piece;
-console.log(this.tiles[to.id]);
-console.log(this.tiles[from.id]);
+
 }
 
 
